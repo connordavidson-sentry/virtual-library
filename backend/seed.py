@@ -1,3 +1,4 @@
+import os
 from app import app, db
 from models import Book, User
 import requests
@@ -134,7 +135,10 @@ def fetch_book_from_google_api(isbn):
         clean_isbn = isbn.replace('-', '').replace(' ', '')
 
         # Call Google Books API
+        api_key = os.environ.get('GOOGLE_BOOKS_API_KEY', '')
         url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{clean_isbn}"
+        if api_key:
+            url += f"&key={api_key}"
         response = requests.get(url, timeout=5)
 
         if response.status_code != 200:

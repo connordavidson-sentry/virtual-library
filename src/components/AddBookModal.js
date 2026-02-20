@@ -40,9 +40,9 @@ function AddBookModal({ onClose, onSuccess }) {
       const cleanISBN = formData.isbn.replace(/[-\s]/g, '');
 
       // Call Google Books API
-      const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=isbn:${cleanISBN}`
-      );
+      const apiKey = process.env.REACT_APP_GOOGLE_BOOKS_API_KEY;
+      const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${cleanISBN}${apiKey ? `&key=${apiKey}` : ''}`;
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error('Failed to fetch book information');
