@@ -12,17 +12,6 @@ import { useAuth } from './context/AuthContext';
 import { getBooks, getGenres } from './api/library';
 import './styles/App.css';
 
-function ErrorButton() {
-  return (
-    <button
-      onClick={() => {
-        throw new Error('This is your first error!');
-      }}
-    >
-      Break the world
-    </button>
-  );
-}
 
 function App() {
   const { user, logout, isAuthenticated, isTeacher } = useAuth();
@@ -169,7 +158,7 @@ function App() {
               </div>
             )}
           </div>
-          <ErrorButton />
+
         </div>
       </header>
       
