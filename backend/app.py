@@ -223,7 +223,8 @@ def create_book():
         isbn=data['isbn'],
         description=data['description'],
         cover=data.get('cover', ''),
-        available=data.get('available', True)
+        available=data.get('available', True),
+        room_number=data.get('room_number', '')
     )
     
     db.session.add(book)
@@ -254,6 +255,8 @@ def update_book(book_id):
         book.cover = data['cover']
     if 'available' in data:
         book.available = data['available']
+    if 'room_number' in data:
+        book.room_number = data['room_number']
     
     db.session.commit()
     
