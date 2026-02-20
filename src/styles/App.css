@@ -576,6 +576,47 @@ body {
   opacity: 0.6;
 }
 
+.teacher-book-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-edit-book {
+  flex: 1;
+  padding: 0.5rem;
+  background: #ecc94b;
+  color: #744210;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-edit-book:hover {
+  background: #d69e2e;
+}
+
+.btn-delete-book {
+  flex: 1;
+  padding: 0.5rem;
+  background: #fed7d7;
+  color: #c53030;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-delete-book:hover {
+  background: #fc8181;
+  color: white;
+}
+
 /* Unavailable Badge */
 .unavailable-badge {
   position: absolute;

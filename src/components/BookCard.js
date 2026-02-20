@@ -1,6 +1,6 @@
 import React from 'react';
 
-function BookCard({ book, onReserve }) {
+function BookCard({ book, onReserve, isTeacher, onEdit, onDelete }) {
   return (
     <div className="book-card">
       {!book.available && <div className="unavailable-badge">Reserved</div>}
@@ -29,6 +29,12 @@ function BookCard({ book, onReserve }) {
         >
           {book.available ? 'Reserve for Pickup' : 'Currently Reserved'}
         </button>
+        {isTeacher && (
+          <div className="teacher-book-actions">
+            <button className="btn-edit-book" onClick={() => onEdit(book)}>Edit</button>
+            <button className="btn-delete-book" onClick={() => onDelete(book)}>Delete</button>
+          </div>
+        )}
       </div>
     </div>
   );

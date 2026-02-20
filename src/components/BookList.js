@@ -1,7 +1,7 @@
 import React from 'react';
 import BookCard from './BookCard';
 
-function BookList({ books, onReserve }) {
+function BookList({ books, onReserve, isTeacher, onEdit, onDelete }) {
   if (books.length === 0) {
     return (
       <div className="no-results">
@@ -13,7 +13,14 @@ function BookList({ books, onReserve }) {
   return (
     <div className="book-list">
       {books.map((book) => (
-        <BookCard key={book.id} book={book} onReserve={onReserve} />
+        <BookCard
+          key={book.id}
+          book={book}
+          onReserve={onReserve}
+          isTeacher={isTeacher}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );

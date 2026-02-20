@@ -3,13 +3,14 @@ import SearchBar from './components/SearchBar';
 import BookList from './components/BookList';
 import ReservationModal from './components/ReservationModal';
 import AddBookModal from './components/AddBookModal';
+import EditBookModal from './components/EditBookModal';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import TeacherAdminPanel from './components/TeacherAdminPanel';
 import MyReservations from './components/MyReservations';
 import TeacherDashboard from './components/TeacherDashboard';
 import { useAuth } from './context/AuthContext';
-import { getBooks, getGenres } from './api/library';
+import { getBooks, getGenres, deleteBook } from './api/library';
 import './styles/App.css';
 
 
@@ -27,6 +28,8 @@ function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [showEditBookModal, setShowEditBookModal] = useState(false);
+  const [editingBook, setEditingBook] = useState(null);
 
   // Fetch books and genres on mount
   useEffect(() => {
@@ -104,9 +107,36 @@ function App() {
 
   const handleAddBookSuccess = () => {
     setShowAddBookModal(false);
-    fetchBooks(); // Refresh books to show the new book
-    fetchGenres(); // Refresh genres in case a new one was added
+    fetchBooks();
+    fetchGenres();
     alert('Book added successfully!');
+  };
+
+  const handleEditBook = (book) => {
+    setEditingBook(book);
+    setShowEditBookModal(true);
+  };
+
+  const handleEditBookSuccess = () => {
+    setShowEditBookModal(false);
+    setEditingBook(null);
+    fetchBooks();
+    fetchGenres();
+    alert('Book updated successfully!');
+  };
+
+  const handleDeleteBook = async (book) => {
+    if (!window.confirm(`Are you sure you want to delete "${book.title}"? This cannot be undone.`)) {
+      return;
+    }
+    try {
+      await deleteBook(book.id);
+      fetchBooks();
+      fetchGenres();
+      alert('Book deleted successfully!');
+    } catch (err) {
+      alert('Failed to delete book: ' + err.message);
+    }
   };
 
   // Filter books based on search term and genre
@@ -199,7 +229,13 @@ function App() {
               Showing {filteredBooks.length} {filteredBooks.length === 1 ? 'book' : 'books'}
             </div>
 
-            <BookList books={filteredBooks} onReserve={handleReserve} />
+            <BookList
+              books={filteredBooks}
+              onReserve={handleReserve}
+              isTeacher={isTeacher()}
+              onEdit={handleEditBook}
+              onDelete={handleDeleteBook}
+            />
           </>
         )}
       </main>
@@ -220,6 +256,14 @@ function App() {
         <AddBookModal
           onClose={() => setShowAddBookModal(false)}
           onSuccess={handleAddBookSuccess}
+        />
+      )}
+
+      {showEditBookModal && editingBook && (
+        <EditBookModal
+          book={editingBook}
+          onClose={() => { setShowEditBookModal(false); setEditingBook(null); }}
+          onSuccess={handleEditBookSuccess}
         />
       )}
 
