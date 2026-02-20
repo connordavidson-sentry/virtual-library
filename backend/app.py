@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
@@ -459,6 +460,38 @@ def get_genres():
 def health_check():
     """Health check endpoint"""
     return jsonify({'status': 'healthy', 'message': 'Virtual Library API is running'})
+
+
+@app.route('/api/setup-admin', methods=['POST'])
+def setup_admin():
+    """One-time endpoint to create the first teacher account. Remove after use."""
+    setup_key = os.environ.get('SETUP_KEY')
+    if not setup_key:
+        return jsonify({'error': 'Setup not enabled'}), 403
+
+    data = request.get_json()
+    if data.get('setup_key') != setup_key:
+        return jsonify({'error': 'Invalid setup key'}), 403
+
+    if User.query.filter_by(role='teacher').first():
+        return jsonify({'error': 'A teacher account already exists'}), 400
+
+    required = ['username', 'email', 'password', 'full_name']
+    for field in required:
+        if field not in data:
+            return jsonify({'error': f'Missing field: {field}'}), 400
+
+    user = User(
+        username=data['username'],
+        email=data['email'],
+        full_name=data['full_name'],
+        role='teacher'
+    )
+    user.set_password(data['password'])
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({'message': f"Teacher account '{data['username']}' created successfully"}), 201
 
 
 # JWT Error handlers
